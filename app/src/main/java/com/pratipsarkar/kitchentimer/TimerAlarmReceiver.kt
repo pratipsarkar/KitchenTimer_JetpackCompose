@@ -9,6 +9,6 @@ class TimerAlarmReceiver: BroadcastReceiver() {
     override fun onReceive(context: Context?, intent: Intent?) {
         val player = MediaPlayer.create(context, R.raw.alarm_sound)
         player.start()
-        context?.stopService(Intent(context, TimerService::class.java))
+        context?.stopService(Intent(context, TimerForegroundService::class.java))
     }
 }

@@ -1,5 +1,8 @@
 package com.pratipsarkar.kitchentimer
 
+import android.Manifest
+import android.os.Build
+import androidx.core.app.ActivityCompat
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import kotlinx.coroutines.Job
@@ -41,6 +44,8 @@ class TimerViewModel(
 
         _timeLeft.value = seconds
         _isRunning.value = true
+
+        repository.startForegroundService()
 
         _timerJob?.cancel()
         _timerJob = viewModelScope.launch {

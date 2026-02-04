@@ -1,5 +1,11 @@
 package com.pratipsarkar.kitchentimer
 
+import android.Manifest
+import android.os.Build
+import android.app.AlarmManager
+import android.content.Intent
+import android.provider.Settings
+import androidx.activity.compose.LocalActivity
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
@@ -12,14 +18,19 @@ import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.core.app.ActivityCompat
 
 @Composable
 fun TimerScreen(viewModel: TimerViewModel) {
 
     val timeLeft by viewModel.timeLeft.collectAsState()
     val isRunning by viewModel.isRunning.collectAsState()
+
+    val activity = LocalActivity.current
+    val context = LocalContext.current
 
     Column(
         modifier = Modifier.fillMaxSize(),
@@ -34,7 +45,26 @@ fun TimerScreen(viewModel: TimerViewModel) {
         Spacer(modifier = Modifier.height(16.dp))
 
         Button(
-            onClick = { viewModel.startTimer(10) },
+            onClick = {
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+                    if (activity != null) {
+                        ActivityCompat.requestPermissions(
+                            activity,
+                            arrayOf(Manifest.permission.POST_NOTIFICATIONS),
+                            100
+                        )
+                    }
+                }
+
+                val alarmManager = context.getSystemService(AlarmManager::class.java)
+
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
+                    if (!alarmManager.canScheduleExactAlarms()) {
+                        context.startActivity(Intent(Settings.ACTION_REQUEST_SCHEDULE_EXACT_ALARM))
+                    }
+                }
+
+                viewModel.startTimer(10) },
             enabled = !isRunning
         ) {
             Text("Start")

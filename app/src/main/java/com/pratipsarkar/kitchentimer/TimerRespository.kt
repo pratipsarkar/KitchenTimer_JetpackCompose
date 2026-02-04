@@ -5,6 +5,7 @@ import android.app.AlarmManager
 import android.content.Context
 import android.content.Intent
 import android.os.Build
+import androidx.core.content.ContextCompat
 import androidx.datastore.preferences.core.edit
 import androidx.datastore.preferences.core.longPreferencesKey
 import androidx.datastore.preferences.preferencesDataStore
@@ -80,6 +81,14 @@ class TimerRepository(
                 TimerState(duration, start)
             } else null
         }
+
+    fun startForegroundService() {
+        ContextCompat.startForegroundService(
+            context,
+            Intent(context, TimerForegroundService::class.java)
+        )
+    }
+
 
     private fun canScheduleExactAlarms(alarmManager: AlarmManager): Boolean {
         return if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
