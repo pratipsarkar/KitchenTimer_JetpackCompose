@@ -2,20 +2,23 @@ package com.pratipsarkar.kitchentimer
 
 import android.os.Bundle
 import androidx.activity.ComponentActivity
+import androidx.activity.compose.LocalActivity
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
 import androidx.activity.viewModels
+import androidx.compose.ui.platform.LocalContext
 import com.pratipsarkar.kitchentimer.ui.theme.KitchenTimerTheme
 
 class MainActivity : ComponentActivity() {
-    private val viewModel by viewModels<TimerViewModel>()
-
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
         setContent {
             KitchenTimerTheme {
-                val timerViewModel: TimerViewModel = viewModel
+                val timerViewModel = TimerViewModel(
+                    engine = TimerEngine(),
+                    repository = TimerRepository(LocalContext.current)
+                )
                 TimerScreen(timerViewModel)
             }
         }

@@ -10,7 +10,8 @@ import kotlinx.coroutines.isActive
 import kotlinx.coroutines.launch
 
 class TimerViewModel(
-    private val engine: TimerEngine = TimerEngine()
+    private val engine: TimerEngine = TimerEngine(),
+    private val repository: TimerRepository,
 ): ViewModel() {
 
     private var _state =
@@ -35,6 +36,8 @@ class TimerViewModel(
             durationMillis = seconds * 1000,
             startTimeMillis = now
         )
+
+        scheduleAndPersistTimer(now)
 
         _timeLeft.value = seconds
         _isRunning.value = true
@@ -64,6 +67,21 @@ class TimerViewModel(
                 durationMillis = 0L,
                 startTimeMillis = null
             )
-
+        cancelTimer()
     }
+
+    private fun scheduleAndPersistTimer(now: Long) {
+        viewModelScope.launch {
+            repository.saveTimer(now, _state.durationMillis)
+            repository.scheduleAlarm(now + _state.durationMillis)
+        }
+    }
+
+    private fun cancelTimer() {
+        viewModelScope.launch {
+            repository.cancelAlarm()
+            repository.clearTimer()
+        }
+    }
+
 }
