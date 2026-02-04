@@ -9,7 +9,6 @@ import com.pratipsarkar.kitchentimer.ui.theme.KitchenTimerTheme
 
 class MainActivity : ComponentActivity() {
     private val viewModel by viewModels<TimerViewModel>()
-    private val engine = TimerEngine()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)

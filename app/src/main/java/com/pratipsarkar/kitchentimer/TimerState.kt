@@ -4,5 +4,4 @@ package com.pratipsarkar.kitchentimer
 data class TimerState(
     val durationMillis: Long,
     val startTimeMillis: Long?,
-    val isRunning: Boolean
 )

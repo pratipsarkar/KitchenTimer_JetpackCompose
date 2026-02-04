@@ -3,7 +3,7 @@ package com.pratipsarkar.kitchentimer
 class TimerEngine {
     fun remainingTime(state: TimerState, now: Long): Long {
         // The full time is the remaining time
-        if (!state.isRunning || state.startTimeMillis == null) {
+        if (state.startTimeMillis == null) {
             return state.durationMillis
         }
         val elapsedTime = now - state.startTimeMillis

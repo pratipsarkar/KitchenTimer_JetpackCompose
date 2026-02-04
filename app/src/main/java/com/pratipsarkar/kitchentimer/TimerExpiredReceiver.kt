@@ -9,7 +9,5 @@ class TimerExpiredReceiver : BroadcastReceiver() {
     override fun onReceive(context: Context?, intent: Intent?) {
         val player = MediaPlayer.create(context, R.raw.alarm_sound)
         player.start()
-
     }
-
 }
